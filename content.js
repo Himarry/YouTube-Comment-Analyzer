@@ -95,14 +95,13 @@
       setTimeout(() => {
         if (result && result.parentNode) {
           result.remove();
-          addLog('解析結果表示を自動で削除しました', 'info');
         }
       }, 5000);
     }
   }
 
   // ★APIキーをここに設定（ご自身のYouTube Data APIキーに差し替えてください）
-  const YOUTUBE_API_KEY = 'ここにあなたのAPIキーを入力';
+  const YOUTUBE_API_KEY = 'AIzaSyCB9iLVqz1AsLrYk83tILnILa7n6OzfEkg';
 
   // 動画IDをURLから取得
   function getVideoId() {
@@ -164,70 +163,43 @@
       return '今';
     }
   }  async function onAnalyzeClick() {
-    // ログポップアップを表示して解析開始
-    addLog('コメント解析を開始します', 'start');
     showResult('解析中...', false);
     
-    addLog('動画IDを取得中...', 'progress');
     const videoId = getVideoId();
     if (!videoId) {
-      addLog('エラー: 動画IDが取得できませんでした', 'error');
       showResult('エラー: 動画IDが取得できませんでした', true);
       return;
     }
-    addLog(`動画ID: ${videoId}`, 'success');
     
-    addLog('YouTube上の表示コメント数を取得中...', 'progress');
     const ytComments = document.querySelectorAll('#contents #content-text');
     const ytCount = ytComments.length;
-    addLog(`YouTube上の表示コメント: ${ytCount}件`, 'success');
     
     await new Promise(r => setTimeout(r, 1000));
-    addLog('YouTube Data APIでコメントを取得中...', 'api');
-    
     const apiData = await fetchComments(videoId);
     const apiCount = apiData.count;
     
-    if (apiData.count === 0 && apiData.comments.length === 0) {
-      addLog('警告: APIからコメントを取得できませんでした (APIキーまたは権限を確認してください)', 'error');
-    } else {
-      addLog(`API取得コメント: ${apiCount}件`, 'success');
-    }
-    
     showResult('解析が完了しました。', false);
-    addLog('解析が完了しました', 'success');
-    
     await new Promise(r => setTimeout(r, 1000));
     
     let resultMsg = '解析結果：\n';
     
     if (ytCount === apiCount) {
       resultMsg += '全てのコメントが表示されています。';
-      addLog('結果: 全てのコメントが表示されています', 'success');
     } else {
       const hiddenCount = Math.max(0, apiCount - ytCount);
       resultMsg += '表示されていないコメントが見つかったため、コメント欄のトップに表示しました';
-      addLog(`未表示コメント ${hiddenCount}件を検出`, 'progress');      // APIで取得した未表示コメントを上部に表示
-      const hiddenComments = apiData.comments.slice(ytCount); // 表示分を除いた残り
+      const hiddenComments = apiData.comments.slice(ytCount);
       if (hiddenComments.length > 0) {
-        // 新しい未表示コメントをフィルタリング（重複除去）
         const newHiddenComments = hiddenComments.filter(comment => !displayedCommentIds.has(comment.id));
-        
         if (newHiddenComments.length > 0) {
-          addLog(`新規未表示コメント ${newHiddenComments.length}件をページ上部に表示中...`, 'progress');
           newHiddenComments.forEach((comment, index) => {
-            addLog(`未表示コメント ${index + 1}/${newHiddenComments.length} を挿入: ${comment.author}`, 'progress');
-            
-            // 表示済みリストに追加
             displayedCommentIds.add(comment.id);
-            
             const commentElement = document.createElement('ytd-comment-view-model');
             commentElement.className = 'style-scope ytd-comment-thread-renderer';
-            commentElement.setAttribute('data-ytcmtck-hidden', 'true'); // 識別用マーカー
+            commentElement.setAttribute('data-ytcmtck-hidden', 'true');
             commentElement.style.borderRadius = '8px';
             commentElement.style.marginBottom = '16px';
             commentElement.innerHTML = `
-            
             <div id="body" class="style-scope ytd-comment-view-model">              <div id="author-thumbnail" class="style-scope ytd-comment-view-model">
                 <button id="author-thumbnail-button" class="style-scope ytd-comment-view-model" style="border: none; background: none; padding: 0; cursor: pointer;" aria-label="${comment.author}">
                   <yt-img-shadow fit="" height="40" width="40" class="style-scope ytd-comment-view-model no-transition" style="background-color: transparent;">
@@ -268,24 +240,14 @@
                 </div>
               </div>
             </div>
-          `;            const commentSection = document.querySelector('#comments #contents');
+          `;
+            const commentSection = document.querySelector('#comments #contents');
             if (commentSection) commentSection.prepend(commentElement);
-          });          addLog(`${newHiddenComments.length}件の新規未表示コメントを表示しました`, 'success');
-          addLog(`累計表示済み未表示コメント: ${displayedCommentIds.size}件`, 'info');
-        } else {
-          addLog('新規未表示コメントは見つかりませんでした（既に表示済み）', 'info');
-          addLog(`累計表示済み未表示コメント: ${displayedCommentIds.size}件`, 'info');
+          });
         }
       }
     }
     showResult(resultMsg, true);
-    addLog('🎉 コメント解析が完了しました！', 'success');
-    
-    // 3秒後にログポップアップを自動で閉じる
-    setTimeout(() => {
-      addLog('ログを自動的に閉じます (手動で閉じることも可能)', 'info');
-      setTimeout(closeLogPopup, 2000);
-    }, 3000);
   }
   // 動的ページ対応とMutationObserver
   let lastUrl = location.href;
@@ -329,114 +291,6 @@
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
-  }
-
-  // ログポップアップを作成・表示
-  function showLogPopup() {
-    let popup = document.getElementById('ytcmtck-log-popup');
-    if (!popup) {
-      popup = document.createElement('div');
-      popup.id = 'ytcmtck-log-popup';
-      popup.style.position = 'fixed';
-      popup.style.top = '20px';
-      popup.style.right = '20px';
-      popup.style.width = '400px';
-      popup.style.maxHeight = '500px';
-      popup.style.backgroundColor = '#fff';
-      popup.style.border = '2px solid #cc0000';
-      popup.style.borderRadius = '8px';
-      popup.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
-      popup.style.zIndex = '10000';
-      popup.style.fontFamily = 'Roboto, Arial, sans-serif';
-      popup.style.fontSize = '14px';
-      popup.style.overflow = 'hidden';
-      
-      const header = document.createElement('div');
-      header.style.backgroundColor = '#cc0000';
-      header.style.color = '#fff';
-      header.style.padding = '12px';
-      header.style.fontWeight = 'bold';
-      header.style.display = 'flex';
-      header.style.justifyContent = 'space-between';
-      header.style.alignItems = 'center';
-      header.innerHTML = '📊 YouTubeコメント解析ログ';
-      
-      const closeBtn = document.createElement('button');
-      closeBtn.innerHTML = '×';
-      closeBtn.style.backgroundColor = 'transparent';
-      closeBtn.style.border = 'none';
-      closeBtn.style.color = '#fff';
-      closeBtn.style.fontSize = '18px';
-      closeBtn.style.cursor = 'pointer';
-      closeBtn.style.padding = '0';
-      closeBtn.style.width = '24px';
-      closeBtn.style.height = '24px';
-      closeBtn.onclick = () => popup.remove();
-      header.appendChild(closeBtn);
-      
-      const content = document.createElement('div');
-      content.id = 'ytcmtck-log-content';
-      content.style.padding = '16px';
-      content.style.maxHeight = '400px';
-      content.style.overflowY = 'auto';
-      content.style.lineHeight = '1.4';
-      
-      popup.appendChild(header);
-      popup.appendChild(content);
-      document.body.appendChild(popup);
-    }
-    return popup;
-  }
-
-  // ログを追加
-  function addLog(message, type = 'info') {
-    const popup = showLogPopup();
-    const content = document.getElementById('ytcmtck-log-content');
-    const logEntry = document.createElement('div');
-    logEntry.style.marginBottom = '8px';
-    logEntry.style.padding = '8px';
-    logEntry.style.borderRadius = '4px';
-    
-    const timestamp = new Date().toLocaleTimeString('ja-JP');
-    let icon = '';
-    let bgColor = '';
-    
-    switch(type) {
-      case 'start':
-        icon = '🚀';
-        bgColor = '#e3f2fd';
-        break;
-      case 'progress':
-        icon = '⏳';
-        bgColor = '#fff3e0';
-        break;
-      case 'success':
-        icon = '✅';
-        bgColor = '#e8f5e8';
-        break;
-      case 'error':
-        icon = '❌';
-        bgColor = '#ffebee';
-        break;
-      case 'api':
-        icon = '🔗';
-        bgColor = '#f3e5f5';
-        break;
-      default:
-        icon = 'ℹ️';
-        bgColor = '#f5f5f5';
-    }
-    
-    logEntry.style.backgroundColor = bgColor;
-    logEntry.innerHTML = `<span style="color: #666; font-size: 12px;">${timestamp}</span> ${icon} ${message}`;
-    content.appendChild(logEntry);
-    content.scrollTop = content.scrollHeight;
-  }
-
-  // ログポップアップを閉じる
-  function closeLogPopup() {
-    const popup = document.getElementById('ytcmtck-log-popup');
-    if (popup) popup.remove();
   }
 
   // 既に表示済みのコメントIDを記録する配列
