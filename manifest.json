@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "YouTubeコメント解析ボタン",
+  "version": "1.0",
+  "description": "YouTubeのコメント欄に解析ボタンを追加し、コメント数を比較・表示します。",
+  "permissions": ["scripting"],
+  "host_permissions": [
+    "https://www.youtube.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
