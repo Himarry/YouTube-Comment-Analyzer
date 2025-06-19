@@ -101,7 +101,7 @@
   }
 
   // ★APIキーをここに設定（ご自身のYouTube Data APIキーに差し替えてください）
-  const YOUTUBE_API_KEY = 'AIzaSyCB9iLVqz1AsLrYk83tILnILa7n6OzfEkg';
+  const YOUTUBE_API_KEY = 'YOUR_API_KEY_HERE';
 
   // 動画IDをURLから取得
   function getVideoId() {
