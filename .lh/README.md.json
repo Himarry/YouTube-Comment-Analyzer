@@ -1,0 +1,18 @@
+{
+    "sourceFile": "README.md",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1750433683023,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1750433683023,
+            "name": "Commit-0",
+            "content": "# YouTube Comment Analyzer\r\n\r\n# YouTube Comment Analyzer\r\n\r\nYouTubeのコメント欄に「コメントを解析する」ボタンを追加し、YouTube上で表示されていないコメントをAPI経由で検出・表示するブラウザ拡張機能です。\r\n\r\n## 機能\r\n- コメント欄の上部に「コメント解析」「簡易解析」ボタンを追加\r\n- ボタンを押すとYouTube Data APIでコメントを取得し、表示されていないコメントを検出\r\n- 未表示コメントをYouTubeのコメント欄上部にYouTube風デザインで表示\r\n- 簡易解析：軽量で高速な解析（コメント数の比較のみ）\r\n- 通常解析：詳細な解析（未表示コメントの実際の表示）\r\n\r\n## 対応ブラウザ\r\n- **Chrome**: `manifest.json`を使用\r\n- **Firefox**: `manifest_firefox.json`を`manifest.json`にリネームして使用\r\n\r\n## 使い方\r\n\r\n### Chrome版\r\n1. このリポジトリをダウンロード\r\n2. `manifest.json`と`content.js`を含むフォルダをChromeの「パッケージ化されていない拡張機能を読み込む」で追加\r\n3. YouTubeの動画ページでコメント欄にボタンが表示されます\r\n\r\n### Firefox版\r\n1. このリポジトリをダウンロード\r\n2. `manifest_firefox.json`を`manifest.json`にリネーム（元の`manifest.json`は削除またはバックアップ）\r\n3. `about:debugging` → 「このFirefox」→ 「一時的なアドオンを読み込む」で`manifest.json`を選択\r\n4. YouTubeの動画ページでコメント欄にボタンが表示されます\r\n\r\n### 共通設定\r\n- **APIキーは`content.js`内の`YOUTUBE_API_KEY`にご自身のものを設定してください**\r\n\r\n## 注意\r\n- **APIキーは絶対にGitHub等で公開しないでください。**\r\n- 公開用には`YOUR_API_KEY_HERE`などダミー値にしておき、各自で設定する運用にしてください。\r\n- YouTube Data APIの利用にはAPIキーが必要です\r\n- 解析結果やUIはYouTubeの仕様変更で動作しなくなる場合があります\r\n\r\n---\r\n"
+        }
+    ]
+}

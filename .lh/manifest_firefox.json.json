@@ -1,0 +1,18 @@
+{
+    "sourceFile": "manifest_firefox.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1750433680941,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1750433680941,
+            "name": "Commit-0",
+            "content": "{\r\n  \"manifest_version\": 2,\r\n  \"name\": \"YouTube Comment Analyzer\",\r\n  \"version\": \"1.0\",\r\n  \"description\": \"YouTubeのコメント欄で表示されていないコメントを検出・表示するFirefox拡張機能\",\r\n\r\n  \"permissions\": [\r\n    \"https://www.youtube.com/*\",\r\n    \"https://www.googleapis.com/*\"\r\n  ],\r\n\r\n  \"content_scripts\": [\r\n    {\r\n      \"matches\": [\"https://www.youtube.com/watch*\"],\r\n      \"js\": [\"content.js\"],\r\n      \"run_at\": \"document_end\"\r\n    }\r\n  ],\r\n\r\n  \"web_accessible_resources\": [],\r\n\r\n  \"browser_specific_settings\": {\r\n    \"gecko\": {\r\n      \"id\": \"ytcmtck@example.com\",\r\n      \"strict_min_version\": \"109.0\"\r\n    }\r\n  }\r\n}\r\n"
+        }
+    ]
+}

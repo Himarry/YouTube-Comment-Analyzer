@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "YouTube Comment Analyzer",
+  "version": "1.0",
+  "description": "YouTubeのコメント欄で表示されていないコメントを検出・表示するFirefox拡張機能",
+
+  "permissions": [
+    "https://www.youtube.com/*",
+    "https://www.googleapis.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/watch*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+
+  "web_accessible_resources": [],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ytcmtck@example.com",
+      "strict_min_version": "109.0"
+    }
+  }
+}
